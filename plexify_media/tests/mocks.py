@@ -12,6 +12,8 @@ class MockCliArgs:
     subtitles: List[str]
     plex_location: str
     label: str
+    verbose: bool
+    log: str
 
 
 class MediaHandlerMock(MediaHandlerBase):

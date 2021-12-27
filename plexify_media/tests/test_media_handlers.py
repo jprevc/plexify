@@ -4,8 +4,9 @@ import shutil
 import pytest
 
 from .mocks import MockCliArgs, MediaHandlerMock
-from .res.res import get_test_input_location, get_test_output_location
+from .res.res import get_test_input_location, get_test_output_location, get_resources_location
 from ..media_handlers import DefaultHandler, label_to_media_handler_map, MovieHandler, ShowHandler
+from ..plexify import get_logger
 
 
 class TestMovieMediaHandler:
@@ -23,6 +24,8 @@ class TestMovieMediaHandler:
                 subtitles=subtitles,
                 plex_location=get_test_output_location(),
                 label=label,
+                log=os.path.join(get_resources_location(), 'test_log.txt'),
+                verbose=True
             )
 
         return make_cli_args
@@ -30,15 +33,22 @@ class TestMovieMediaHandler:
     @pytest.fixture(name='make_movie_handler')
     def make_movie_handler_fixture(self):
         def make_movie_handler(cli_args):
-            return label_to_media_handler_map().get(cli_args.label, DefaultHandler)(cli_args)
+            logger = get_logger(cli_args.verbose, cli_args.log)
+            return label_to_media_handler_map().get(cli_args.label, DefaultHandler)(cli_args, logger)
 
         return make_movie_handler
 
     @pytest.fixture(name='cleanup')
     def cleanup_fixture(self):
         yield
+        # remove entire folder tree in output location
         shutil.rmtree(get_test_output_location())
+
+        # recreate folder
         os.mkdir(get_test_output_location())
+
+        # recreate .gitkeep file
+        open(os.path.join(get_test_output_location(), '.gitkeep'), 'w+').close()
 
     @pytest.mark.parametrize('label,expected_class', [('movie', MovieHandler), ('show', ShowHandler)])
     def test_correct_media_handler_is_returned(self, label, expected_class):

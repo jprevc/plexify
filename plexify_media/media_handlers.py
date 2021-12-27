@@ -32,8 +32,9 @@ class MediaHandlerBase(ABC):
     Base class for any media handler.
     """
 
-    def __init__(self, cli_args):
+    def __init__(self, cli_args, logger):
         self.cli_args = cli_args
+        self.logger = logger
 
     def run(self):
         """
@@ -47,12 +48,18 @@ class MediaHandlerBase(ABC):
         output_abs_folder_location = os.path.join(
             self.cli_args.plex_location, self.cli_args.label, output_rel_folder_location
         )
+        self.logger.info(f"Determined output location: {output_abs_folder_location}")
 
         # copy media files to plex
+        self.logger.info(f"Started copying media files to output folder.")
         self.copy_torrent_to_plex(output_abs_folder_location)
+        self.logger.info(f"Media files copied successfully.")
 
         # run post-proscessing hook (if implemented)
-        self.post_processing_hook(output_abs_folder_location)
+        try:
+            self.post_processing_hook(output_abs_folder_location)
+        except BaseException:
+            self.logger.exception("Post-processing hook failed.")
 
     @abstractmethod
     def get_output_folder_name(self, torrent_name: str) -> str:

@@ -4,9 +4,27 @@ This script can be used to automatically "plexify" media files, which can then b
 
 import argparse
 import sys
-import os
+import logging
 
 import plexify_media.media_handlers as mhf
+
+
+def get_logger(is_verbose, log_path=None):
+    logger = logging.getLogger('main')
+    logger.setLevel(logging.DEBUG if is_verbose else logging.INFO)
+
+    formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(message)s')
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(stream_handler)
+
+    if log_path:
+        file_handler = logging.FileHandler(log_path)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+
+    return logger
 
 
 def main():
@@ -20,6 +38,8 @@ def main():
     parser.add_argument("--label", help="label given to downloaded media")
     parser.add_argument("--download_location", help="location of downloaded media")
     parser.add_argument("--plex_location", help="location of plex media storage")
+    parser.add_argument("--log", required=False, help="If specified, log messages will be written to this file")
+    parser.add_argument("--verbose", action='store_true', required=False, help="Print verbose log messages")
     parser.add_argument(
         "--subtitles",
         action="append",
@@ -30,21 +50,19 @@ def main():
 
     args = parser.parse_args()
 
-    # write input parameter values to file for debug purposes
-    with open(os.path.join(args.plex_location, "plexify_debug.txt"), "a", encoding='utf-8') as dbg_file:
-        debug_str = (
-            f"label={args.label}, torrent_name={args.torrent_name}, torrent_kind={args.torrent_kind}, "
-            f"download_location={args.download_location}, plex_location={args.plex_location}\n"
-        )
-        dbg_file.write(debug_str)
+    logger = get_logger(args.verbose, args.log)
+    logger.info(f"Started running program with arguments: {args.__dict__}")
 
     # if any of parameters was not provided, stop the program and don't do anything
     if not all([args.label, args.download_location, args.plex_location]):
-        sys.exit(0)
+        logger.error("Some of the arguments were not provided, exiting...")
+        sys.exit(-1)
 
     # call appropriate handler according to media label that was given when downloading a torrent
     media_handler = mhf.label_to_media_handler_map().get(args.label, mhf.DefaultHandler)
-    media_handler(args).run()
+    media_handler(args, logger).run()
+
+    logger.info("Media files handled successfully.")
 
 
 if __name__ == "__main__":
