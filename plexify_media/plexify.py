@@ -6,7 +6,7 @@ import argparse
 import sys
 import os
 
-import plexify_media.media_handler_functions as mhf
+import plexify_media.media_handlers as mhf
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
     parser.add_argument("--label", help="label given to downloaded media")
     parser.add_argument("--download_location", help="location of downloaded media")
     parser.add_argument("--plex_location", help="location of plex media storage")
-    parser.add_argument("--subtitles", action="append", required=False,
+    parser.add_argument("--subtitles", action="append", required=False, default=[],
                         help="If specified, program will attempt to find subtitles of the specified language code.")
 
     args = parser.parse_args()
