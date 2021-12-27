@@ -73,11 +73,7 @@ class MovieHandler(MediaHandlerBase):
     Handler for movie files.
     """
 
-    @classmethod
-    @property
-    @abstractmethod
-    def label(cls):
-        return 'movie'
+    label = "movie"
 
     def get_output_folder_location(self) -> str:
         # parse movie name and year from torrent name
@@ -85,7 +81,7 @@ class MovieHandler(MediaHandlerBase):
 
         # create output folder names and path to which movie will be copied
         output_movie_folder_name = f"{movie_name} ({movie_year})"
-        output_movie_folder_path = os.path.join(self.cli_args.plex_location, "movies", output_movie_folder_name)
+        output_movie_folder_path = os.path.join(self.cli_args.plex_location, self.label, output_movie_folder_name)
 
         return output_movie_folder_path
 
@@ -102,11 +98,8 @@ class MovieHandler(MediaHandlerBase):
 
 
 class ShowHandler(MediaHandlerBase):
-    @classmethod
-    @property
-    @abstractmethod
-    def label(cls):
-        return 'show'
+
+    label = 'show'
 
     def get_output_folder_location(self) -> str:
         # parse show name and season number from torrent name
@@ -134,11 +127,7 @@ class DefaultHandler(MediaHandlerBase):
     Default media handler.
     """
 
-    @classmethod
-    @property
-    @abstractmethod
-    def label(cls):
-        return 'default'
+    label = 'default'
 
     def get_output_folder_location(self) -> str:
         return os.path.join(self.cli_args.plex_location, self.cli_args.label, self.cli_args.torrent_name)
