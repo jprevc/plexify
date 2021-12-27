@@ -20,15 +20,22 @@ def main():
     parser.add_argument("--label", help="label given to downloaded media")
     parser.add_argument("--download_location", help="location of downloaded media")
     parser.add_argument("--plex_location", help="location of plex media storage")
-    parser.add_argument("--subtitles", action="append", required=False, default=[],
-                        help="If specified, program will attempt to find subtitles of the specified language code.")
+    parser.add_argument(
+        "--subtitles",
+        action="append",
+        required=False,
+        default=[],
+        help="If specified, program will attempt to find subtitles of the specified language code.",
+    )
 
     args = parser.parse_args()
 
     # write input parameter values to file for debug purposes
     with open(os.path.join(args.plex_location, "plexify_debug.txt"), "a", encoding='utf-8') as dbg_file:
-        debug_str = f"label={args.label}, torrent_name={args.torrent_name}, torrent_kind={args.torrent_kind}, " \
-                    f"download_location={args.download_location}, plex_location={args.plex_location}\n"
+        debug_str = (
+            f"label={args.label}, torrent_name={args.torrent_name}, torrent_kind={args.torrent_kind}, "
+            f"download_location={args.download_location}, plex_location={args.plex_location}\n"
+        )
         dbg_file.write(debug_str)
 
     # if any of parameters was not provided, stop the program and don't do anything

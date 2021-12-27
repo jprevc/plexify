@@ -18,6 +18,6 @@ class MediaHandlerMock(MediaHandlerBase):
 
     label = 'mock'
 
-    def get_output_folder_location(self) -> str:
+    def get_output_folder_name(self) -> str:
         pass
 
