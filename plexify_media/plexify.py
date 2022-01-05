@@ -33,8 +33,8 @@ def main():
     """
     # parse input arguments
     parser = argparse.ArgumentParser(description="Process arguments passed by torrent client")
-    parser.add_argument("--torrent_name", help="name of torrent")
-    parser.add_argument("--torrent_kind", help='kind of torrent, can either be "single" or "multi"')
+    parser.add_argument("--torrent_name", required=False, help="name of torrent")
+    parser.add_argument("--torrent_kind", required=False, help='kind of torrent, can either be "single" or "multi"')
     parser.add_argument("--label", help="label given to downloaded media")
     parser.add_argument("--download_location", help="location of downloaded media")
     parser.add_argument("--plex_location", help="location of plex media storage")

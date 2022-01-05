@@ -44,18 +44,23 @@ class MediaHandlerBase(ABC):
         2) Media files are copied to the determined output location.
         3) Any post-processing algortihm is run on the output folder (for example subtitle acquisition)
         """
-        output_rel_folder_location = self.get_output_folder_name(self.cli_args.torrent_name)
+        if self.cli_args.torrent_name:
+            torrent_name = self.cli_args.torrent_name
+        else:
+            torrent_name = os.path.split(self.cli_args.download_location)[-1]
+
+        output_rel_folder_location = self.get_output_folder_name(torrent_name)
         output_abs_folder_location = os.path.join(
             self.cli_args.plex_location, self.cli_args.label, output_rel_folder_location
         )
         self.logger.info(f"Determined output location: {output_abs_folder_location}")
 
         # copy media files to plex
-        self.logger.info(f"Started copying media files to output folder.")
+        self.logger.info("Started copying media files to output folder.")
         self.copy_torrent_to_plex(output_abs_folder_location)
-        self.logger.info(f"Media files copied successfully.")
+        self.logger.info("Media files copied successfully.")
 
-        # run post-proscessing hook (if implemented)
+        # run post-processing hook (if implemented)
         try:
             self.post_processing_hook(output_abs_folder_location)
         except BaseException:
@@ -76,16 +81,36 @@ class MediaHandlerBase(ABC):
         """
         Copies downloaded torrent to plex location.
         """
-        if self.cli_args.torrent_kind == "multi":
-            copy_tree(self.cli_args.download_location, output_folder_path)
-        elif self.cli_args.torrent_kind == "single":
-            os.mkdir(output_folder_path)
-            copyfile(
-                os.path.join(self.cli_args.download_location, self.cli_args.torrent_name),
-                os.path.join(output_folder_path, self.cli_args.torrent_name),
-            )
+        download_location = self.cli_args.download_location
+        output_path = output_folder_path
+
+        # in case torrent_kind is provided, download location is determined by combining download path with
+        # torrent name
+        if self.cli_args.torrent_kind and self.cli_args.torrent_kind == "single":
+            download_location = os.path.join(download_location, self.cli_args.torrent_name)
+
+        if os.path.isdir(download_location):
+            copy_handler = copy_tree
         else:
-            raise ValueError(f"torrent_kind should either be 'single' or 'multi' and not {self.cli_args.torrent_kind}")
+            copy_handler = copyfile
+
+            # in case media is a single file, we need to determine source location for copying by combining file name
+            # with generated output folder name
+            output_path = os.path.join(output_folder_path, str(download_location.split(os.sep)[-1]))
+
+            # in case media is not a directory, we need to explicitly create directory structure, otherwise copyfile
+            # won't work
+            self._make_dir_structure(output_folder_path)
+
+        copy_handler(download_location, output_path)
+
+    @staticmethod
+    def _make_dir_structure(path):
+        try:
+            os.makedirs(path)
+        except OSError:
+            # exception is raised if folder already exists, ignore it
+            pass
 
     @classmethod
     @property
@@ -128,6 +153,7 @@ class ShowHandler(MediaHandlerBase):
     """
     Handler for shows video files.
     """
+
     label = 'show'
 
     def get_output_folder_name(self, torrent_name: str) -> str:
