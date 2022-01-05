@@ -11,7 +11,7 @@ from ..plexify import get_logger
 
 class TestMovieMediaHandler:
     @pytest.fixture(name='make_cli_args')
-    def make_cli_args_fixture(self):
+    def make_cli_args_fixture(self, tmp_path):
         def make_cli_args(test_input_folder, torrent_name, torrent_kind, label, subtitles=None):
 
             if not subtitles:
@@ -22,7 +22,7 @@ class TestMovieMediaHandler:
                 torrent_name=torrent_name,
                 torrent_kind=torrent_kind,
                 subtitles=subtitles,
-                plex_location=get_test_output_location(),
+                plex_location=tmp_path,
                 label=label,
                 log=os.path.join(get_resources_location(), 'test_log.txt'),
                 verbose=True
@@ -38,18 +38,6 @@ class TestMovieMediaHandler:
 
         return make_movie_handler
 
-    @pytest.fixture(name='cleanup')
-    def cleanup_fixture(self):
-        yield
-        # remove entire folder tree in output location
-        shutil.rmtree(get_test_output_location())
-
-        # recreate folder
-        os.mkdir(get_test_output_location())
-
-        # recreate .gitkeep file
-        open(os.path.join(get_test_output_location(), '.gitkeep'), 'w+').close()
-
     @pytest.mark.parametrize('label,expected_class', [('movie', MovieHandler), ('show', ShowHandler)])
     def test_correct_media_handler_is_returned(self, label, expected_class):
         assert label_to_media_handler_map()[label] == expected_class
@@ -62,7 +50,7 @@ class TestMovieMediaHandler:
         self,
         make_cli_args,
         make_movie_handler,
-        cleanup,
+        tmp_path,
         label,
         input_media_name,
         input_media_folder,
@@ -71,7 +59,7 @@ class TestMovieMediaHandler:
         movie_handler = make_movie_handler(make_cli_args(input_media_folder, input_media_name, 'multi', label))
         movie_handler.run()
 
-        output_label_folder = os.path.join(get_test_output_location(), label)
+        output_label_folder = os.path.join(tmp_path, label)
         output_folder = os.path.join(output_label_folder, expected_output_name)
 
         assert os.path.isdir(output_label_folder)

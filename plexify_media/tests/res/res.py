@@ -7,7 +7,3 @@ def get_resources_location():
 
 def get_test_input_location():
     return os.path.join(get_resources_location(), 'test_input')
-
-
-def get_test_output_location():
-    return os.path.join(get_resources_location(), 'test_output')
