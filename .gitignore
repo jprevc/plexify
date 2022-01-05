@@ -1,3 +1,6 @@
 /venv/**
 **/__pycache__/**
 /plexify_media/tests/res/test_log.txt
+/build/**
+dist/**
+*.egg-info/**
