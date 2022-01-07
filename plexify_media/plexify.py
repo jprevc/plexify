@@ -9,7 +9,13 @@ import logging
 import plexify_media.media_handlers as mhf
 
 
-def get_logger(is_verbose, log_path=None):
+def get_logger(is_verbose: bool, log_path: str = None):
+    """
+    Create logger instance.
+
+    :param is_verbose: If True, logger will log also "debug" messages.
+    :param log_path: If provided, logger will output messages to this text file.
+    """
     logger = logging.getLogger('main')
     logger.setLevel(logging.DEBUG if is_verbose else logging.INFO)
 

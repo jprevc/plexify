@@ -64,8 +64,9 @@ class MediaHandlerBase(ABC):
         # run post-processing hook (if implemented)
         try:
             self.post_processing_hook(output_abs_folder_location)
-        except BaseException:
+        except BaseException as exc:
             self.logger.exception("Post-processing hook failed.")
+            raise exc
 
     @staticmethod
     @abstractmethod
@@ -114,10 +115,9 @@ class MediaHandlerBase(ABC):
             # exception is raised if folder already exists, ignore it
             pass
 
-    @classmethod
     @property
     @abstractmethod
-    def label(cls):
+    def label(self):
         """
         Specifies label, to which this handler will be matched.
         """
