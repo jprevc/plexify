@@ -11,6 +11,7 @@ from shutil import copyfile
 from datetime import timedelta
 from abc import ABC, abstractmethod
 from typing import List
+import argparse
 
 from babelfish import Language
 import subliminal as sbl
@@ -32,17 +33,17 @@ class MediaHandlerBase(ABC):
     Base class for any media handler.
     """
 
-    def __init__(self, cli_args, logger):
+    def __init__(self, cli_args: argparse.Namespace, logger):
         self.cli_args = cli_args
         self.logger = logger
 
     def run(self):
         """
-        Runs media conversion algortihm:
+        Runs media conversion algorithm:
 
         1) Output folder name is determined from the media name.
         2) Media files are copied to the determined output location.
-        3) Any post-processing algortihm is run on the output folder (for example subtitle acquisition)
+        3) Any post-processing algorithm is run on the output folder (for example subtitle acquisition)
         """
         if self.cli_args.torrent_name:
             torrent_name = self.cli_args.torrent_name
@@ -66,8 +67,9 @@ class MediaHandlerBase(ABC):
         except BaseException:
             self.logger.exception("Post-processing hook failed.")
 
+    @staticmethod
     @abstractmethod
-    def get_output_folder_name(self, torrent_name: str) -> str:
+    def get_output_folder_name(torrent_name: str) -> str:
         """
         Returns output folder name for media files.
         """
@@ -128,7 +130,8 @@ class MovieHandler(MediaHandlerBase):
 
     label = "movie"
 
-    def get_output_folder_name(self, torrent_name: str) -> str:
+    @staticmethod
+    def get_output_folder_name(torrent_name: str) -> str:
         # parse movie name and year from torrent name
         movie_name, movie_year = MovieHandler._get_movie_name_and_year(torrent_name)
 
@@ -156,7 +159,8 @@ class ShowHandler(MediaHandlerBase):
 
     label = 'show'
 
-    def get_output_folder_name(self, torrent_name: str) -> str:
+    @staticmethod
+    def get_output_folder_name(torrent_name: str) -> str:
         # parse show name and season number from torrent name
         show_name, season = ShowHandler._get_show_name_and_season(torrent_name)
 
@@ -184,7 +188,8 @@ class DefaultHandler(MediaHandlerBase):
 
     label = 'default'
 
-    def get_output_folder_name(self, torrent_name: str) -> str:
+    @staticmethod
+    def get_output_folder_name(torrent_name: str) -> str:
         return torrent_name
 
 
