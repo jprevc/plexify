@@ -10,7 +10,7 @@ import pytest
 from .mocks import MockCliArgs
 from .res.res import get_test_input_location, get_resources_location
 from ..media_handlers import DefaultHandler, label_to_media_handler_map, MovieHandler, ShowHandler, MediaHandlerBase
-from ..plexify import get_logger
+from ..base import get_logger
 
 
 @pytest.fixture(name='make_cli_args')

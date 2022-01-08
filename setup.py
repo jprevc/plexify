@@ -8,7 +8,7 @@ setup(
     author="jprevc",
     author_email="jost.prevc@gmail.com",
     packages=["plexify"],
+    scripts=["plexify/__main__.py"],
+    entry_points={"console_scripts": ["plexify = plexify.__main__:main"]},
     install_requires=["subliminal", "babelfish"],
-    scripts=["plexify/plexify.py", "plexify/media_handlers.py", "plexify/base.py"],
-    entry_points={"console_scripts": ["plexify=plexify.plexify:main"]},
 )
