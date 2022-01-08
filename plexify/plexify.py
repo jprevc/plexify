@@ -5,8 +5,8 @@ This script can be used to automatically "plexify" media files, which can then b
 import argparse
 import sys
 import logging
-import plexify_media.media_handlers as mhf
-from plexify_media.base import version
+import plexify.media_handlers as mhf
+from plexify.base import version
 
 
 def get_logger(is_verbose: bool, log_path: str = None):
@@ -63,7 +63,7 @@ def main():
         print(f"Plexify: {version}")
         sys.exit(-2)
 
-    logger.info(f"Using plexify_media version: {version}")
+    logger.info(f"Using plexify version: {version}")
     logger.info(f"Started running program with arguments: {args.__dict__}")
 
     # if any of parameters was not provided, stop the program and don't do anything

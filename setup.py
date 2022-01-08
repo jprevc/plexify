@@ -1,5 +1,5 @@
 from setuptools import setup
-from plexify_media.base import version
+from plexify.base import version
 
 setup(
     name="plexify",
