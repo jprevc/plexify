@@ -9,6 +9,6 @@ setup(
     author_email="jost.prevc@gmail.com",
     packages=["plexify"],
     install_requires=["subliminal", "babelfish"],
-    scripts=["plexify/plexify.py"],
+    scripts=["plexify/plexify.py", "plexify/media_handlers.py", "plexify/base.py"],
     entry_points={"console_scripts": ["plexify=plexify.plexify:main"]},
 )
