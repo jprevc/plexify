@@ -169,6 +169,8 @@ def test_correct_folder_structure_is_made_in_output_location(
         ('South Park Post COVID 2021 720p AMZN WEBRip x264 GalaxyRG', MovieHandler, 'South Park Post COVID (2021)'),
         ('Dexter.S09E01.1080p.WEB.H264-CAKES', ShowHandler, os.path.join('Dexter', 'Season 09')),
         ('RickAndMorty_S05E02', ShowHandler, os.path.join('RickAndMorty', 'Season 05')),
+        ('[ OxTorrent.sh ] Rick.and.Morty.S05E07.FRENCH.mkv', ShowHandler, os.path.join('Rick and Morty', 'Season 05')),
+        ('[ OxTorrent.sh ] Holidate.2020.HDRip.XviD.AC3-EVO', MovieHandler, 'Holidate (2020)'),
     ],
 )
 def test_folder_name_is_correctly_determined(

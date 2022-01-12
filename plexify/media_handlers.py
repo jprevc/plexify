@@ -138,6 +138,10 @@ class MediaHandlerBase(ABC):
         Specifies label, to which this handler will be matched.
         """
 
+    @staticmethod
+    def _remove_clutter_from_string(inp_str):
+        return re.sub("[\(\[].*?[\)\]]", "", inp_str).strip()
+
 
 class MovieHandler(MediaHandlerBase):
     """
@@ -150,6 +154,8 @@ class MovieHandler(MediaHandlerBase):
     def get_output_folder_name(torrent_name: str) -> str:
         # parse movie name and year from torrent name
         movie_name, movie_year = MovieHandler._get_movie_name_and_year(torrent_name)
+
+        movie_name = MovieHandler._remove_clutter_from_string(movie_name)
 
         # create output folder names and path to which movie will be copied
         output_movie_folder_name = f"{movie_name} ({movie_year})"
@@ -179,6 +185,8 @@ class ShowHandler(MediaHandlerBase):
     def get_output_folder_name(torrent_name: str) -> str:
         # parse show name and season number from torrent name
         show_name, season = ShowHandler._get_show_name_and_season(torrent_name)
+
+        show_name = ShowHandler._remove_clutter_from_string(show_name)
 
         # create output folder names and path to which show videos will be copied
         output_show_folder_path = os.path.join(show_name, "Season " + season)
