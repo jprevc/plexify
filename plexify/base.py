@@ -1,6 +1,6 @@
 import logging
 
-version = "2.1.0"
+version = "2.2.0"
 
 
 def get_logger(is_verbose: bool, log_path: str = None):
