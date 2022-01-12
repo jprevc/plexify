@@ -50,10 +50,12 @@ class MediaHandlerBase(ABC):
         else:
             torrent_name = os.path.split(self.cli_args.download_location)[-1]
 
+        # get label according to 'label' and 'use_download_location_as_label' CLI options
+        label = self._get_label()
+
+        # determine output folder location
         output_rel_folder_location = self.get_output_folder_name(torrent_name)
-        output_abs_folder_location = os.path.join(
-            self.cli_args.plex_location, self.cli_args.label, output_rel_folder_location
-        )
+        output_abs_folder_location = os.path.join(self.cli_args.plex_location, label, output_rel_folder_location)
         self.logger.info(f"Determined output location: {output_abs_folder_location}")
 
         # copy media files to plex
@@ -67,6 +69,20 @@ class MediaHandlerBase(ABC):
         except BaseException as exc:
             self.logger.exception("Post-processing hook failed.")
             raise exc
+
+    def _get_label(self) -> str:
+        label = self.cli_args.label
+
+        if self.cli_args.use_download_location_as_label:
+            download_location_folder = os.path.split(self.cli_args.download_location)[-1]
+
+            if not os.path.isdir(download_location_folder):
+                # handle case where download location is single file
+                download_location_folder = os.path.split(self.cli_args.download_location)[-2]
+
+            label = download_location_folder
+
+        return label
 
     @staticmethod
     @abstractmethod

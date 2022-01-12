@@ -20,5 +20,6 @@ class MockCliArgs:
     subtitles: List[str]
     plex_location: Union[str, Path]
     label: str
+    use_download_location_as_label: bool
     verbose: bool
     log: Union[str, Path]

@@ -16,7 +16,16 @@ def main():
     parser = argparse.ArgumentParser(description="Process arguments passed by torrent client")
     parser.add_argument("--torrent_name", required=False, help="name of torrent")
     parser.add_argument("--torrent_kind", required=False, help='kind of torrent, can either be "single" or "multi"')
-    parser.add_argument("--label", help="label given to downloaded media")
+
+    label_group = parser.add_mutually_exclusive_group(required=True)
+    label_group.add_argument("--label", help="label given to downloaded media")
+    label_group.add_argument(
+        "--use_download_folder_as_label",
+        action='store_true',
+        help="If specified, program will use last folder from download_location as a label. This is useful for some "
+             "clients, which can't pass label as an argument.",
+    )
+
     parser.add_argument("--download_location", help="location of downloaded media")
     parser.add_argument("--plex_location", help="location of plex media storage")
     parser.add_argument("--log", required=False, help="If specified, log messages will be written to this file")
