@@ -50,7 +50,7 @@ class MediaHandlerBase(ABC):
         else:
             torrent_name = os.path.split(self.cli_args.download_location)[-1]
 
-        # get label according to 'label' and 'use_download_location_as_label' CLI options
+        # get label according to 'label' and 'use_download_folder_as_label' CLI options
         label = self._get_label()
 
         # determine output folder location
@@ -73,12 +73,8 @@ class MediaHandlerBase(ABC):
     def _get_label(self) -> str:
         label = self.cli_args.label
 
-        if self.cli_args.use_download_location_as_label:
+        if self.cli_args.use_download_folder_as_label:
             download_location_folder = os.path.split(self.cli_args.download_location)[-1]
-
-            if not os.path.isdir(download_location_folder):
-                # handle case where download location is single file
-                download_location_folder = os.path.split(self.cli_args.download_location)[-2]
 
             label = download_location_folder
 
@@ -107,6 +103,9 @@ class MediaHandlerBase(ABC):
         # torrent name
         if self.cli_args.torrent_kind and self.cli_args.torrent_kind == "single":
             download_location = os.path.join(download_location, self.cli_args.torrent_name)
+
+        if self.cli_args.use_download_folder_as_label:
+            os.path.join(download_location, self.cli_args.torrent_name)
 
         if os.path.isdir(download_location):
             copy_handler = copy_tree

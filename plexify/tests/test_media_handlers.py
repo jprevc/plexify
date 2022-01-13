@@ -27,13 +27,13 @@ def make_cli_args_fixture(
         torrent_kind: Optional[str] = None,
         torrent_name: Optional[str] = None,
         subtitles: Optional[List[str]] = None,
-        use_download_location_as_label=False,
+        use_download_folder_as_label=False,
     ) -> MockCliArgs:
         if not subtitles:
             subtitles = []
 
-        if use_download_location_as_label:
-            # simulate case, when user selects use_download_location_as_label argument.
+        if use_download_folder_as_label:
+            # simulate case, when user selects use_download_folder_as_label argument.
             # Append label to download location path, and set label to None.
             os.path.join(download_location, label)
             label = None
@@ -45,7 +45,7 @@ def make_cli_args_fixture(
             subtitles=subtitles,
             plex_location=tmp_path,
             label=label,
-            use_download_location_as_label=use_download_location_as_label,
+            use_download_folder_as_label=use_download_folder_as_label,
             log=os.path.join(get_resources_location(), 'test_log.txt'),
             verbose=True,
         )
@@ -74,7 +74,7 @@ def test_correct_media_handler_is_returned(label: str, expected_class: Type[Medi
     assert label_to_media_handler_map()[label] == expected_class
 
 
-@pytest.mark.parametrize('use_download_location_as_label', [True, False])
+@pytest.mark.parametrize('use_download_folder_as_label', [True, False])
 @pytest.mark.parametrize(
     'download_location,label,torrent_name,torrent_kind,expected_output_name',
     [
@@ -137,7 +137,7 @@ def test_correct_media_handler_is_returned(label: str, expected_class: Type[Medi
     ],
 )
 def test_correct_folder_structure_is_made_in_output_location(
-    use_download_location_as_label,
+    use_download_folder_as_label,
     make_cli_args,
     make_media_handler,
     tmp_path,
