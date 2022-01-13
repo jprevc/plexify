@@ -26,8 +26,8 @@ def main():
              "clients, which can't pass label as an argument.",
     )
 
-    parser.add_argument("--download_location", help="location of downloaded media")
-    parser.add_argument("--plex_location", help="location of plex media storage")
+    parser.add_argument("--download_location", required=True, help="location of downloaded media")
+    parser.add_argument("--plex_location", required=True, help="location of plex media storage")
     parser.add_argument("--log", required=False, help="If specified, log messages will be written to this file")
     parser.add_argument("--verbose", action='store_true', required=False, help="Print verbose log messages")
     parser.add_argument("--version", action='version', version=f"Plexify: {version}", help="Print version and exit.")
@@ -45,11 +45,6 @@ def main():
 
     logger.info(f"Using plexify version: {version}")
     logger.info(f"Started running program with arguments: {args.__dict__}")
-
-    # if any of parameters was not provided, stop the program and don't do anything
-    if not all([args.label, args.download_location, args.plex_location]):
-        logger.error("Some of the arguments were not provided, exiting...")
-        sys.exit(-1)
 
     # call appropriate handler according to media label that was given when downloading a torrent
     media_handler = mhf.label_to_media_handler_map().get(args.label, mhf.DefaultHandler)
