@@ -30,7 +30,7 @@ def main():
     parser.add_argument("--plex_location", help="location of plex media storage")
     parser.add_argument("--log", required=False, help="If specified, log messages will be written to this file")
     parser.add_argument("--verbose", action='store_true', required=False, help="Print verbose log messages")
-    parser.add_argument("--version", action='store_true', required=False, help="Print version and exit.")
+    parser.add_argument("--version", action='version', version=f"Plexify: {version}", help="Print version and exit.")
     parser.add_argument(
         "--subtitles",
         action="append",
@@ -42,10 +42,6 @@ def main():
     args = parser.parse_args()
 
     logger = get_logger(args.verbose, args.log)
-
-    if args.version:
-        print(f"Plexify: {version}")
-        sys.exit(-2)
 
     logger.info(f"Using plexify version: {version}")
     logger.info(f"Started running program with arguments: {args.__dict__}")
