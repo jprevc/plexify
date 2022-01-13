@@ -23,7 +23,7 @@ def main():
         "--use_download_folder_as_label",
         action='store_true',
         help="If specified, program will use last folder from download_location as a label. This is useful for some "
-             "clients, which can't pass label as an argument.",
+        "clients, which can't pass label as an argument.",
     )
 
     parser.add_argument("--download_location", required=True, help="location of downloaded media")

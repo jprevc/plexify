@@ -32,7 +32,7 @@ def get_logger(is_verbose: bool, log_path: str = None) -> logging.Logger:
 
 def get_label(cli_args) -> str:
     """
-    Get media label, according to 'label' and 'use_download_folder_as_label' options.
+    Returns media label, according to 'label' and 'use_download_folder_as_label' options.
 
     :return: Media label.
     """
