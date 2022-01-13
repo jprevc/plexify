@@ -171,6 +171,7 @@ def test_correct_folder_structure_is_made_in_output_location(
         ('RickAndMorty_S05E02', ShowHandler, os.path.join('RickAndMorty', 'Season 05')),
         ('[ OxTorrent.sh ] Rick.and.Morty.S05E07.FRENCH.mkv', ShowHandler, os.path.join('Rick and Morty', 'Season 05')),
         ('[ OxTorrent.sh ] Holidate.2020.HDRip.XviD.AC3-EVO', MovieHandler, 'Holidate (2020)'),
+        ('Vikings.S06E01.HDTV.x264-SVA[eztv].mkv', ShowHandler, os.path.join('Vikings', 'Season 06')),
     ],
 )
 def test_folder_name_is_correctly_determined(

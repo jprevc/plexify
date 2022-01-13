@@ -3,8 +3,8 @@ This script can be used to automatically "plexify" media files, which can then b
 """
 
 import argparse
-import sys
-from plexify.base import version, get_logger
+
+from plexify.base import version, get_logger, get_label
 import plexify.media_handlers as mhf
 
 
@@ -47,7 +47,7 @@ def main():
     logger.info(f"Started running program with arguments: {args.__dict__}")
 
     # call appropriate handler according to media label that was given when downloading a torrent
-    media_handler = mhf.label_to_media_handler_map().get(args.label, mhf.DefaultHandler)
+    media_handler = mhf.label_to_media_handler_map().get(get_label(args), mhf.DefaultHandler)
     media_handler(args, logger).run()
 
     logger.info("Media files handled successfully.")

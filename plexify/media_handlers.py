@@ -16,6 +16,8 @@ import argparse
 from babelfish import Language
 import subliminal as sbl
 
+from .base import get_label
+
 
 def label_to_media_handler_map():
     """
@@ -45,13 +47,13 @@ class MediaHandlerBase(ABC):
         2) Media files are copied to the determined output location.
         3) Any post-processing algorithm is run on the output folder (for example subtitle acquisition)
         """
-        if self.cli_args.torrent_name:
+        if self.cli_args.torrent_name is not None:
             torrent_name = self.cli_args.torrent_name
         else:
             torrent_name = os.path.split(self.cli_args.download_location)[-1]
 
         # get label according to 'label' and 'use_download_folder_as_label' CLI options
-        label = self._get_label()
+        label = get_label(self.cli_args)
 
         # determine output folder location
         output_rel_folder_location = self.get_output_folder_name(torrent_name)
@@ -69,16 +71,6 @@ class MediaHandlerBase(ABC):
         except BaseException as exc:
             self.logger.exception("Post-processing hook failed.")
             raise exc
-
-    def _get_label(self) -> str:
-        label = self.cli_args.label
-
-        if self.cli_args.use_download_folder_as_label:
-            download_location_folder = os.path.split(self.cli_args.download_location)[-1]
-
-            label = download_location_folder
-
-        return label
 
     @staticmethod
     @abstractmethod
