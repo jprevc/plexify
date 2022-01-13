@@ -97,15 +97,14 @@ class MediaHandlerBase(ABC):
         Copies downloaded torrent to plex location.
         """
         download_location = self.cli_args.download_location
+        torrent_kind = self.cli_args.torrent_kind
+        use_download_folder_as_lab = self.cli_args.use_download_folder_as_label
         output_path = output_folder_path
 
-        # in case torrent_kind is provided, download location is determined by combining download path with
-        # torrent name
-        if self.cli_args.torrent_kind and self.cli_args.torrent_kind == "single":
+        # in case torrent_kind is provided or use_download_folder_as_lab is selected, download location is determined
+        # by combining download path with torrent name
+        if (torrent_kind and torrent_kind == "single") or use_download_folder_as_lab:
             download_location = os.path.join(download_location, self.cli_args.torrent_name)
-
-        if self.cli_args.use_download_folder_as_label:
-            os.path.join(download_location, self.cli_args.torrent_name)
 
         if os.path.isdir(download_location):
             copy_handler = copy_tree
